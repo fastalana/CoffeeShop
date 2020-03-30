@@ -45,6 +45,27 @@ def get_drinks_detail(token):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
+# @app.route('/drinks', methods=['POST'])
+# # @requires_auth('post:drinks')
+# # def create_drink(token):
+# def create_drink():
+#     body = request.get_json()
+
+#     new_drink_title = body.get('title', None)
+#     new_drink_recipe = body.get('recipe', None)
+
+#     try:
+#         drink = Drink(title=new_drink_title, recipe=new_drink_recipe)
+#         drink.insert()
+
+#         return jsonify({
+#           'success': True,
+#           'drinks': drink.long
+#         })
+    
+#     except:
+#         abort(422)
+
 
 
 '''
