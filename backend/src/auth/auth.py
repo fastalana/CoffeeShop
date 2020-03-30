@@ -9,6 +9,10 @@ AUTH0_DOMAIN = 'alanabellucci.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'drinks'
 
+# jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
+# jwks = json.loads(jsonurl.read())
+# print(jwks)
+
 ## AuthError Exception
 '''
 AuthError Exception
@@ -19,6 +23,8 @@ class AuthError(Exception):
         self.error = error
         self.status_code = status_code
 
+# token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlJFUkNORFJGT1RBME1UWTRSamd5UVRJMVFrTXhRamczTnpZek1qRTVOVEZGTURreVFUVXpPUSJ9.eyJpc3MiOiJodHRwczovL2FsYW5hYmVsbHVjY2kuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVlN2ZiY2YwOTE4ZWMzMGNiMTQ3YjQ3NiIsImF1ZCI6ImRyaW5rcyIsImlhdCI6MTU4NTU5NjU2MSwiZXhwIjoxNTg1NjAzNzYxLCJhenAiOiJLYlVuWDRBRDBTQUVBNEFSMU5nMnZ5UWVPMjNDbURDciIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmRyaW5rcyIsImdldDpkcmlua3MtZGV0YWlsIiwicGF0Y2g6ZHJpbmtzIiwicG9zdDpkcmlua3MiXX0.mbQIHnlrlGXeYE0SGi5U8wpIG31XtjJpoCzws6eu5-N43-i6vjoC6dfX3nOJEkacMfAps4o1lMRHIvEFItX-jNan0FqG8jO0JSYgwZCgtUchS4Rx2RCJvTkqZ-2Nu6iXMZNBrLS4t5gK-q7a56MBm9G4AkdA2IfG9X86C60ZHGk4c-fIQuW76c5esJ0nh5PObwHZzgwb4J9B2etU5v66YOhdCHyad-DPCmn6rtdizrNFrN0toZMdc2cIqEnCWya60pzYWTbnvK_UFwIxeCqQfcvMMRqNxugPnTJapX14Vw6w_zOkwVty86wykKvDUhbKlFuIRzL6ngI1VWMf762cAA"
+# print(jwt.get_unverified_header(token))
 
 ## Auth Header
 
@@ -61,7 +67,61 @@ def check_permissions(permission, payload):
     !!NOTE urlopen has a common certificate error described here: https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
 '''
 def verify_decode_jwt(token):
-    raise Exception('Not Implemented')
+    #GET THE PUBLIC KEY FROM AUTH0
+    jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
+    jwks = json.loads(jsonurl.read())
+
+    #GET THE DATA IN THE HEADER
+    unverified_header = jwt.get_unverified_header(token)
+
+    #CHOOSE OUR KEY
+    rsa_key = {}
+    if 'kid' not in unverified_header:
+        raise AuthError({
+            'code': 'invalid_header',
+            'description': 'Authorization malformed.'
+    }, 401)
+    for key in jwks['keys']:
+        if key['kid'] == unverified_header['kid']:
+            rsa_key = {
+                'kty': key['kty'],
+                'kid': key['kid'],
+                'use': key['use'],
+                'n': key['n'],
+                'e': key['e']
+            }
+    # FINALLY, VERIFY!!
+    if rsa_key:
+        try:
+            # USE THE KEY TO VALIDATE THE JWT
+            payload = jwt.decode(
+                token, 
+                rsa_key,
+                algorithms=ALGORITHMS,
+                audience=API_AUDIENCE,
+                issuer='https://' + AUTH0_DOMAIN + '/'
+            )
+            return payload
+        except jwt.ExpiredSignatureError:
+            raise AuthError({
+                'code': 'token_expired',
+                'description': 'Token expired.'
+        }, 401)
+        except jwt.JWTClaimsError:
+            raise AuthError({
+                'code': 'invalid_claims',
+                'description': 'Incorrect claims.  Please, check the audience and issuer.'
+        }, 401)
+        except Exception:
+            raise AuthError({
+                'code': 'invalid_header',
+                'description': 'Unable to parse authentication token.'
+        }, 400)
+    raise AuthError({
+        'code': 'invalid_header',
+        'description': 'Unable to find the appropriate key.'
+    }, 400)
+    # raise Exception('Not Implemented')
 
 '''
 @TODO implement @requires_auth(permission) decorator method
