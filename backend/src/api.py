@@ -11,34 +11,12 @@ app = Flask(__name__)
 setup_db(app)
 CORS(app)
 
-# UNCOMMENT TO TEST IF APP IS CONNECTED CORRECTLY
-# @app.route('/headers')
-# def headers():
-#     print('hello world')
-#     return 'not implemented'
-
-# UNCOMMENT TO TEST IF APP IS CAPTURING HEADERS CORRECTLY
-# @app.route('/headers')
-# def headers():
-#     auth_header = request.headers['Authorization']
-#     header_parts = auth_header.split(' ')
-#     print(header_parts[1])
-#     return 'not implemented'
-
-# UNCOMMENT TO TEST IF APP IS REQUIRING AN AUTHORIZATION HEADER
-# ADD get_token_auth_header METHOD TO IMPORTS FROM .auth.auth ABOVE
-# @app.route('/headers')
-# def headers():
-#     jwt = get_token_auth_header()
-#     print(jwt)
-#     return 'not implemented'
-
 '''
-@TODO uncomment the following line to initialize the datbase
+The following line initializes the datbase
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 '''
-# db_drop_and_create_all()
+db_drop_and_create_all()
 
 ## ROUTES
 '''

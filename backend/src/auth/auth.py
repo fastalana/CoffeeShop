@@ -1,5 +1,5 @@
 import json
-from flask import request, _request_ctx_stack
+from flask import request, _request_ctx_stack, abort
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
@@ -8,10 +8,6 @@ from urllib.request import urlopen
 AUTH0_DOMAIN = 'alanabellucci.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'drinks'
-
-# jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
-# jwks = json.loads(jsonurl.read())
-# print(jwks)
 
 ## AuthError Exception
 '''
@@ -22,9 +18,6 @@ class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
-
-# token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlJFUkNORFJGT1RBME1UWTRSamd5UVRJMVFrTXhRamczTnpZek1qRTVOVEZGTURreVFUVXpPUSJ9.eyJpc3MiOiJodHRwczovL2FsYW5hYmVsbHVjY2kuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVlN2ZiY2YwOTE4ZWMzMGNiMTQ3YjQ3NiIsImF1ZCI6ImRyaW5rcyIsImlhdCI6MTU4NTU5NjU2MSwiZXhwIjoxNTg1NjAzNzYxLCJhenAiOiJLYlVuWDRBRDBTQUVBNEFSMU5nMnZ5UWVPMjNDbURDciIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmRyaW5rcyIsImdldDpkcmlua3MtZGV0YWlsIiwicGF0Y2g6ZHJpbmtzIiwicG9zdDpkcmlua3MiXX0.mbQIHnlrlGXeYE0SGi5U8wpIG31XtjJpoCzws6eu5-N43-i6vjoC6dfX3nOJEkacMfAps4o1lMRHIvEFItX-jNan0FqG8jO0JSYgwZCgtUchS4Rx2RCJvTkqZ-2Nu6iXMZNBrLS4t5gK-q7a56MBm9G4AkdA2IfG9X86C60ZHGk4c-fIQuW76c5esJ0nh5PObwHZzgwb4J9B2etU5v66YOhdCHyad-DPCmn6rtdizrNFrN0toZMdc2cIqEnCWya60pzYWTbnvK_UFwIxeCqQfcvMMRqNxugPnTJapX14Vw6w_zOkwVty86wykKvDUhbKlFuIRzL6ngI1VWMf762cAA"
-# print(jwt.get_unverified_header(token))
 
 ## Auth Header
 '''
@@ -52,7 +45,7 @@ def get_token_auth_header():
 
 #Check Permissions
 '''
-@TODO implement check_permissions(permission, payload) method
+check_permissions(permission, payload) method
     @INPUTS
         permission: string permission (i.e. 'post:drink')
         payload: decoded jwt payload
@@ -63,7 +56,18 @@ def get_token_auth_header():
     return true otherwise
 '''
 def check_permissions(permission, payload):
-    raise Exception('Not Implemented')
+    if 'permissions' not in payload:
+        raise AuthError({
+            'code': 'invalid_claims',
+            'description': 'Permissions not included in JWT.'
+        }, 400)
+
+    if permission not in payload['permissions']:
+        raise AuthError({
+            'code': 'unauthorized',
+            'description': 'Permission not found.'
+        }, 403)
+    return True
 
 #Verify Decode JWT
 '''
