@@ -79,6 +79,9 @@ def get_drinks_detail(token):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
+# @app.route('/drinks/<int:drink_id>', methods=['PATCH'])
+# @requires_auth('patch:drinks')
+# def update_drink(token):
 
 
 '''
@@ -91,6 +94,9 @@ def get_drinks_detail(token):
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
+# @app.route('/drinks/<int:drink_id>', methods=['DELETE'])
+# @requires_auth('delete:drinks')
+# def delete_drink(token):
 
 
 ## Error Handling
