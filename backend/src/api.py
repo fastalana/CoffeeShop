@@ -26,7 +26,7 @@ CORS(app)
 #     return 'not implemented'
 
 # UNCOMMENT TO TEST IF APP IS REQUIRING AN AUTHORIZATION HEADER
-# DOESN'T CURRENTLY RECOGNIZE GET_TOKEN_AUTH_HEADER() FROM AUTH.PY
+# ADD get_token_auth_header METHOD TO IMPORTS FROM .auth.auth ABOVE
 # @app.route('/headers')
 # def headers():
 #     jwt = get_token_auth_header()
