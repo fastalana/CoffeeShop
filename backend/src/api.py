@@ -11,6 +11,20 @@ app = Flask(__name__)
 setup_db(app)
 CORS(app)
 
+# UNCOMMENT TO TEST IF APP IS CONNECTED CORRECTLY
+# @app.route('/headers')
+# def headers():
+#     print('hello world')
+#     return 'not implemented'
+
+# UNCOMMENT TO TEST IF APP IS CAPTURING HEADERS CORRECTLY
+# @app.route('/headers')
+# def headers():
+#     auth_header = request.headers['Authorization']
+#     header_parts = auth_header.split(' ')
+#     print(header_parts[1])
+#     return 'not implemented'
+
 '''
 @TODO uncomment the following line to initialize the datbase
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
