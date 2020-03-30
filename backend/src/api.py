@@ -25,6 +25,14 @@ CORS(app)
 #     print(header_parts[1])
 #     return 'not implemented'
 
+# UNCOMMENT TO TEST IF APP IS REQUIRING AN AUTHORIZATION HEADER
+# DOESN'T CURRENTLY RECOGNIZE GET_TOKEN_AUTH_HEADER() FROM AUTH.PY
+# @app.route('/headers')
+# def headers():
+#     jwt = get_token_auth_header()
+#     print(jwt)
+#     return 'not implemented'
+
 '''
 @TODO uncomment the following line to initialize the datbase
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
