@@ -21,20 +21,25 @@ db_drop_and_create_all()
 ## ROUTES
 @app.route('/drinks')
 def get_drinks():
-    drinks = list(map(Drink.short, Drink.query.all()))
+    drinks = Drink.query.all()
+
     return jsonify({
-        "success": True,
-        "drinks": drinks
+        'success': True,
+        'drinks': [drink.short() for drink in drinks]
     })
 
 @app.route('/drinks-detail')
 @requires_auth('get:drinks-detail')
 def get_drinks_detail(token):
-    drinks = list(map(Drink.long, Drink.query.all()))
-    return jsonify({
-        "success": True,
-        "drinks": drinks
-    })
+    try:
+        drinks = Drink.query.all()
+
+        return jsonify({
+            'success': True,
+            'drinks': [drink.long() for drink in drinks]
+        })
+    except:
+        abort(404)
 
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
