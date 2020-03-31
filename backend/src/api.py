@@ -125,26 +125,27 @@ def delete_drink(token, id):
     except:
         abort(422)
 
-
-
-
 ## Error Handling
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
-                    "success": False, 
-                    "error": 422,
-                    "message": "unprocessable"
+                    'success': False, 
+                    'error': 422,
+                    'message': 'unprocessable'
                     }), 422
 
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({
-        "success": False,
-        "error": 404,
-        "message": "resource not found"
+        'success': False,
+        'error': 404,
+        'message': 'resource not found'
     }, 404)
 
 @app.errorhandler(AuthError)
 def auth_error(e):
-    return jsonify(e.error), e.status_code
+    return jsonify({
+        'success': False,
+        'error': e.status_code,
+        'message': e.error
+    }, 401)
