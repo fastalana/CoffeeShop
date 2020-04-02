@@ -138,7 +138,6 @@ def verify_decode_jwt(token):
         'code': 'invalid_header',
         'description': 'Unable to find the appropriate key.'
     }, 400)
-    # raise Exception('Not Implemented')
 
 '''
 @requires_auth(permission) decorator method
