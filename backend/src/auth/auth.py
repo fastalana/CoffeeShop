@@ -67,7 +67,8 @@ def check_permissions(permission, payload):
             'code': 'unauthorized',
             'description': 'Permission not found.'
         }, 401)
-    return True
+    else:
+        return True
 
 #Verify Decode JWT
 '''
