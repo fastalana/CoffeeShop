@@ -19,7 +19,7 @@ The following line initializes the datbase
 db_drop_and_create_all()
 
 ## ROUTES
-@app.route('/drinks')
+@app.route('/drinks', methods=['GET'])
 def get_drinks():
     drinks = Drink.query.all()
 
@@ -28,7 +28,7 @@ def get_drinks():
         'drinks': [drink.short() for drink in drinks]
     })
 
-@app.route('/drinks-detail')
+@app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
 def get_drinks_detail(token):
     try:
